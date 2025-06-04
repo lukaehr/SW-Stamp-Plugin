@@ -1,0 +1,517 @@
+:root {
+    /* Light Mode */
+    --lm-bg-primary: #F0F0F0;
+    --lm-bg-secondary: #ffffff;
+    --lm-bg-tertiary: #e9e9e9;
+    --lm-bg-tertiary-rgb: 233, 233, 233; /* RGB für rgba() */
+    --lm-text-primary: #121212;
+    --lm-text-secondary: #444444;
+    --lm-accent: #003DA5;
+    --lm-accent-hover: #002c7a;
+    --lm-danger: #c53030;
+    --lm-danger-hover: #9b2c2c;
+    --lm-icon-fill: #383838; /* Etwas dunkler für besseren Kontrast */
+    --lm-icon-fill-hover: #000000;
+    --lm-border-color: #c0c0c0;
+    --lm-input-bg: #ffffff;
+    --lm-input-border: #a0a0a0;
+    --lm-card-shadow: 0 3px 8px rgba(0,0,0,0.07);
+
+    /* Dark Mode */
+    --dm-bg-primary: #11191E;
+    --dm-bg-secondary: #1A242D;
+    --dm-bg-tertiary: #253038;
+    --dm-bg-tertiary-rgb: 37, 48, 56; /* RGB für rgba() */
+    --dm-text-primary: #e8e8e8;
+    --dm-text-secondary: #b8b8b8;
+    --dm-accent: #005BC9;
+    --dm-accent-hover: #0077ff;
+    --dm-danger: #f47174;
+    --dm-danger-hover: #ff8a80;
+    --dm-icon-fill: #b0b0b0; /* Etwas heller für besseren Kontrast */
+    --dm-icon-fill-hover: #ffffff;
+    --dm-border-color: #303a42;
+    --dm-input-bg: #1f2932;
+    --dm-input-border: #48535c;
+    --dm-card-shadow: 0 3px 8px rgba(0,0,0,0.25);
+
+    /* General */
+    --font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --border-radius-strong: 10px;
+    --border-radius-medium: 7px;
+    --border-radius-small: 4px;
+    --popup-width: 400px;
+    --popup-max-height: 560px;
+}
+
+/* Theme Setup */
+body {
+    font-family: var(--font-family);
+    background-color: var(--lm-bg-primary);
+    color: var(--lm-text-primary);
+    margin: 0;
+    width: var(--popup-width);
+    max-height: var(--popup-max-height);
+    padding: 16px;
+    box-sizing: border-box;
+    font-size: 14.5px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: var(--dm-bg-primary);
+        color: var(--dm-text-primary);
+    }
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+#listView, #formView {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    width: 100%;
+    overflow: hidden;
+}
+
+#listView header, #formView header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--lm-border-color);
+    margin-bottom: 12px;
+    flex-shrink: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+@media (prefers-color-scheme: dark) {
+    #listView header, #formView header {
+        border-bottom: 1px solid var(--dm-border-color);
+    }
+}
+
+#listView header h1, #formView header h1 {
+    font-size: 1.5em;
+    margin: 0;
+    color: var(--lm-accent);
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-grow: 1;
+}
+@media (prefers-color-scheme: dark) {
+    #listView header h1, #formView header h1 {
+        color: var(--dm-accent);
+    }
+}
+
+.header-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.icon-btn {
+    background: transparent;
+    border:none;
+    cursor: pointer;
+    padding: 7px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease, transform 0.15s ease; /* transform hinzugefügt */
+}
+.icon-btn:active { /* genereller active state für icon-buttons */
+    transform: scale(0.975);
+}
+.icon-btn svg {
+    fill: var(--lm-icon-fill);
+    width: 20px;
+    height: 20px;
+}
+.icon-btn:hover {
+    background-color: var(--lm-bg-tertiary);
+}
+.icon-btn:hover svg {
+    fill: var(--lm-icon-fill-hover);
+}
+@media (prefers-color-scheme: dark) {
+    .icon-btn svg { fill: var(--dm-icon-fill); }
+    .icon-btn:hover { background-color: var(--dm-bg-tertiary); }
+    .icon-btn:hover svg { fill: var(--dm-icon-fill-hover); }
+}
+
+#showAddFormBtn {
+    background-color: var(--lm-accent);
+}
+#showAddFormBtn svg {
+    fill: white !important;
+    width: 22px;
+    height: 22px;
+}
+#showAddFormBtn:hover {
+    background-color: var(--lm-accent-hover);
+    transform: scale(1.025); /* Leichter Zoom für Add-Button */
+}
+#showAddFormBtn:active {
+    transform: scale(0.975);
+}
+
+@media (prefers-color-scheme: dark) {
+    #showAddFormBtn { background-color: var(--dm-accent); }
+    #showAddFormBtn:hover { background-color: var(--dm-accent-hover); transform: scale(1.05);}
+    #showAddFormBtn:active {transform: scale(0.95);}
+}
+
+#stampList {
+    flex-grow: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+.empty-state {
+    color: var(--lm-text-secondary);
+    text-align: center;
+    padding: 20px 0;
+    font-style: italic;
+    font-size: 0.95em;
+}
+@media (prefers-color-scheme: dark) {
+    .empty-state { color: var(--dm-text-secondary); }
+}
+
+.stamp-item {
+    background-color: var(--lm-bg-secondary);
+    border-radius: var(--border-radius-strong);
+    padding: 14px;
+    box-shadow: var(--lm-card-shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+.stamp-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.09);
+}
+@media (prefers-color-scheme: dark) {
+    .stamp-item {
+        background-color: var(--dm-bg-secondary);
+        box-shadow: var(--dm-card-shadow);
+    }
+    .stamp-item:hover {
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+}
+
+.stamp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+.stamp-name {
+    font-weight: 600;
+    font-size: 1.1em;
+    color: var(--lm-accent);
+    word-break: break-all;
+    padding-right: 8px;
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+@media (prefers-color-scheme: dark) {
+    .stamp-name { color: var(--dm-accent); }
+}
+
+.stamp-actions {
+    display: flex;
+    gap: 6px; /* Etwas mehr Platz zwischen den moderneren Buttons */
+    flex-shrink: 0;
+}
+
+/* NEUE STILE FÜR .action-btn IN .stamp-actions */
+.stamp-actions .action-btn {
+    background: transparent;
+    padding: 7px; /* Leicht vergrößerte Klickfläche */
+    border-radius: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s ease, background-color 0.2s ease; /* background-color für subtilen Hover */
+}
+.stamp-actions .action-btn svg {
+    width: 20px; /* Leicht vergrößerte Icons */
+    height: 20px;
+    fill: var(--lm-icon-fill);
+    transition: fill 0.2s ease;
+}
+.stamp-actions .action-btn:hover {
+    background-color: rgba(var(--lm-bg-tertiary-rgb), 0.4); /* Sehr subtiler Hintergrund beim Hover */
+    transform: scale(1.05); /* Moderner Zoom-Effekt */
+}
+.stamp-actions .action-btn:hover svg {
+    fill: var(--lm-icon-fill-hover); /* Icon-Farbe ändert sich stärker */
+}
+.stamp-actions .action-btn:active {
+    transform: scale(0.98); /* Klick-Feedback */
+    background-color: rgba(var(--lm-bg-tertiary-rgb), 0.6); /* Etwas stärkerer Hintergrund beim Klick */
+}
+
+/* Dark Mode für die neuen .action-btn Stile */
+@media (prefers-color-scheme: dark) {
+    .stamp-actions .action-btn svg {
+        fill: var(--dm-icon-fill);
+    }
+    .stamp-actions .action-btn:hover {
+        background-color: rgba(var(--dm-bg-tertiary-rgb), 0.3); /* Dunkler, subtiler Hintergrund */
+        /* transform ist bereits oben definiert und gilt auch hier */
+    }
+    .stamp-actions .action-btn:hover svg {
+        fill: var(--dm-icon-fill-hover);
+    }
+    .stamp-actions .action-btn:active {
+        background-color: rgba(var(--dm-bg-tertiary-rgb), 0.5);
+        /* transform ist bereits oben definiert */
+    }
+}
+/* Ende der neuen Stile für .action-btn */
+
+
+.delete-btn svg { /* Behält seine spezifische Gefahrenfarbe bei */
+    fill: var(--lm-danger) !important;
+}
+.delete-btn:hover svg {
+    fill: var(--lm-danger-hover) !important;
+}
+@media (prefers-color-scheme: dark) {
+    .delete-btn svg {
+        fill: var(--dm-danger) !important;
+    }
+    .delete-btn:hover svg {
+        fill: var(--dm-danger-hover) !important;
+    }
+}
+
+.stamp-content {
+    font-size: 0.9em;
+    white-space: pre-wrap;
+    line-height: 1.45;
+    padding: 10px;
+    background-color: var(--lm-bg-tertiary);
+    border-radius: var(--border-radius-medium);
+    border: 1px solid var(--lm-border-color);
+    cursor: pointer;
+    color: var(--lm-text-secondary);
+    word-break: break-word;
+    width: 100%;
+    box-sizing: border-box;
+}
+.stamp-content:hover {
+    border-color: var(--lm-accent);
+    background-color: var(--lm-bg-secondary);
+}
+@media (prefers-color-scheme: dark) {
+    .stamp-content {
+        background-color: var(--dm-bg-tertiary);
+        border: 1px solid var(--dm-border-color);
+        color: var(--dm-text-secondary);
+    }
+    .stamp-content:hover {
+        border-color: var(--dm-accent);
+        background-color: var(--dm-bg-secondary);
+    }
+}
+
+#formView .form-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 4px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 100%;
+}
+
+#formView .form-content label {
+    font-weight: 500;
+    font-size: 0.85em;
+    color: var(--lm-text-secondary);
+    margin-bottom: -4px;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+}
+@media (prefers-color-scheme: dark) {
+    #formView .form-content label { color: var(--dm-text-secondary); }
+}
+
+#formView .form-content input[type="text"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--lm-input-border);
+    border-radius: var(--border-radius-medium);
+    background-color: var(--lm-input-bg);
+    color: var(--lm-text-primary);
+    font-size: 0.95em;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+#formView .form-content input[type="text"]:focus {
+    outline: none;
+    border-color: var(--lm-accent);
+    box-shadow: 0 0 0 2.5px rgba(0, 61, 165, 0.25);
+}
+@media (prefers-color-scheme: dark) {
+    #formView .form-content input[type="text"] {
+        border: 1px solid var(--dm-input-border);
+        background-color: var(--dm-input-bg);
+        color: var(--dm-text-primary);
+    }
+    #formView .form-content input[type="text"]:focus {
+        border-color: var(--dm-accent);
+        box-shadow: 0 0 0 2.5px rgba(0, 91, 201, 0.3);
+    }
+}
+
+#formView .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--lm-border-color);
+    flex-shrink: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+@media (prefers-color-scheme: dark) {
+    #formView .form-actions { border-top: 1px solid var(--dm-border-color); }
+}
+
+.form-actions .primary-btn, .form-actions .secondary-btn {
+    padding: 9px 16px;
+    font-size: 0.9em;
+    border-radius: var(--border-radius-medium);
+}
+.form-actions .primary-btn svg, .form-actions .secondary-btn svg {
+    width: 16px;
+    height: 16px;
+    margin-right: 6px;
+}
+
+.form-actions .primary-btn {
+    background-color: var(--lm-accent);
+    color: white;
+}
+.form-actions .primary-btn:hover { background-color: var(--lm-accent-hover); }
+.form-actions .primary-btn svg { fill: white; }
+
+.form-actions .secondary-btn {
+    background-color: var(--lm-bg-secondary);
+    color: var(--lm-text-primary);
+    border: 1px solid var(--lm-border-color);
+}
+.form-actions .secondary-btn:hover { background-color: var(--lm-bg-tertiary); }
+.form-actions .secondary-btn svg { fill: var(--lm-text-primary); }
+
+@media (prefers-color-scheme: dark) {
+    .form-actions .primary-btn { background-color: var(--dm-accent); }
+    .form-actions .primary-btn:hover { background-color: var(--dm-accent-hover); }
+
+    .form-actions .secondary-btn {
+        background-color: var(--dm-bg-secondary);
+        color: var(--dm-text-primary);
+        border: 1px solid var(--dm-border-color);
+    }
+    .form-actions .secondary-btn:hover { background-color: var(--dm-bg-tertiary); }
+    .form-actions .secondary-btn svg { fill: var(--dm-text-primary); }
+}
+
+.toast {
+    visibility: hidden;
+    min-width: 260px;
+    background-color: #282828;
+    color: #fff;
+    text-align: center;
+    border-radius: var(--border-radius-medium);
+    padding: 12px 18px;
+    position: fixed;
+    z-index: 1001;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 15px;
+    font-size: 0.9em;
+    opacity: 0;
+    transition: visibility 0s 0.3s, opacity 0.3s ease-out, bottom 0.3s ease-out;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+}
+.toast.show {
+    visibility: visible;
+    opacity: 1;
+    bottom: 25px;
+    transition: opacity 0.3s ease-in, bottom 0.3s ease-in;
+}
+@media (prefers-color-scheme: dark) {
+    .toast {
+        background-color: var(--dm-bg-tertiary);
+        color: var(--dm-text-primary);
+        box-shadow: 0 3px 12px rgba(0,0,0,0.35);
+    }
+}
+
+/* Scrollbar Styling */
+#stampList::-webkit-scrollbar,
+#formView .form-content::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    width: 7px;
+}
+#stampList::-webkit-scrollbar-track,
+#formView .form-content::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
+    background: transparent;
+}
+#stampList::-webkit-scrollbar-thumb,
+#formView .form-content::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+    background-color: var(--lm-border-color);
+    border-radius: var(--border-radius-small);
+    border: 2px solid transparent;
+    background-clip: content-box; /* Lässt den Rand transparent erscheinen */
+}
+#stampList::-webkit-scrollbar-thumb:hover,
+#formView .form-content::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover {
+    background-color: var(--lm-text-secondary);
+}
+@media (prefers-color-scheme: dark) {
+    #stampList::-webkit-scrollbar-thumb,
+    #formView .form-content::-webkit-scrollbar-thumb,
+    body::-webkit-scrollbar-thumb {
+        background-color: var(--dm-border-color);
+         border: 2px solid transparent; /* Passt sich dem Body-Hintergrund an */
+    }
+    #stampList::-webkit-scrollbar-thumb:hover,
+    #formView .form-content::-webkit-scrollbar-thumb:hover,
+    body::-webkit-scrollbar-thumb:hover {
+        background-color: var(--dm-text-secondary);
+    }
+}

@@ -1,0 +1,161 @@
+/* Variablen für das Content Script Popover, falls die Haupt-CSS-Variablen nicht greifen */
+:root {
+    --cs-lm-bg-primary: #F0F0F0;
+    --cs-lm-bg-secondary: #ffffff;
+    --cs-lm-text-primary: #181818;
+    --cs-lm-text-secondary: #484848;
+    --cs-lm-accent: #003DA5;
+    --cs-lm-accent-hover-bg: #e6f0ff; /* Heller Hover für Listenelemente */
+    --cs-lm-border-color: #cccccc;
+
+    --cs-dm-bg-primary: #11191E;
+    --cs-dm-bg-secondary: #1A242D;
+    --cs-dm-text-primary: #e0e0e0;
+    --cs-dm-text-secondary: #b0b0b0;
+    --cs-dm-accent: #005BC9;
+    --cs-dm-accent-hover-bg: #2a3b4e; /* Dunklerer Hover für Listenelemente */
+    --cs-dm-border-color: #38424a;
+
+    --cs-border-radius-strong: 10px; /* Etwas weniger als im Popup für Kompaktheit */
+    --cs-border-radius-medium: 6px;
+    --cs-font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Wrapper für das Icon */
+.stamp-injector-icon-wrapper {
+    position: absolute;
+    z-index: 9998;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Positionierung erfolgt dynamisch via JS */
+}
+
+.stamp-injector-icon {
+    width: 22px; /* Etwas größer */
+    height: 22px;
+    cursor: pointer;
+    opacity: 0.5; /* Standardmäßig dezenter */
+    transition: opacity 0.2s ease-in-out, transform 0.2s ease;
+    background-color: rgba(128, 128, 128, 0.1);
+    border-radius: 50%; /* Rundes Icon */
+    padding: 3px;
+    box-sizing: border-box;
+}
+
+.stamp-injector-icon:hover {
+    opacity: 1;
+    transform: scale(1.1);
+    background-color: rgba(128, 128, 128, 0.2);
+}
+
+@media (prefers-color-scheme: dark) {
+    .stamp-injector-icon {
+        background-color: rgba(200, 200, 200, 0.1);
+        /* SVG Filter kann hier hilfreich sein, wenn das SVG nicht schon angepasst ist */
+        /* filter: invert(0.8) brightness(1.1); */
+    }
+     .stamp-injector-icon:hover {
+        background-color: rgba(200, 200, 200, 0.25);
+    }
+}
+
+
+/* Popover für Stempelauswahl */
+#stamp-injector-popover {
+    position: absolute;
+    background-color: var(--cs-lm-bg-secondary);
+    color: var(--cs-lm-text-primary);
+    border: 1px solid var(--cs-lm-border-color);
+    border-radius: var(--cs-border-radius-strong); /* Stärkere Abrundung */
+    box-shadow: 0 5px 18px rgba(0,0,0,0.12);
+    z-index: 9999;
+    min-width: 220px; /* Etwas breiter */
+    max-width: 320px;
+    max-height: 280px; /* Mehr Höhe */
+    overflow-y: auto;
+    padding: 0;
+    display: none;
+    font-family: var(--cs-font-family);
+    font-size: 14px; /* Leicht angehobene Schriftgröße */
+}
+
+#stamp-injector-popover h3 {
+    font-size: 1.1em; /* Größerer Titel */
+    font-weight: 600;
+    margin: 0;
+    padding: 10px 14px; /* Angepasstes Padding */
+    border-bottom: 1px solid var(--cs-lm-border-color);
+    background-color: var(--cs-lm-bg-primary);
+    color: var(--cs-lm-accent);
+}
+
+#stamp-injector-popover ul {
+    list-style: none;
+    margin: 0;
+    padding: 6px 0; /* Kleiner vertikaler Abstand für die Liste */
+}
+
+#stamp-injector-popover li {
+    padding: 10px 14px; /* Mehr Padding */
+    cursor: pointer;
+    /* border-bottom: 1px solid var(--cs-lm-border-color); Letzte Border entfernen ist sauberer */
+    transition: background-color 0.15s ease, color 0.15s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-radius: var(--cs-border-radius-medium); /* Abrundung für Listenelemente */
+    margin: 2px 6px; /* Abstand zwischen den Listenelementen */
+    color: var(--cs-lm-text-primary);
+}
+/* #stamp-injector-popover li:last-child { border-bottom: none; } */
+
+#stamp-injector-popover li:hover {
+    background-color: var(--cs-lm-accent-hover-bg);
+    color: var(--cs-lm-accent); /* Akzentfarbe für Text im Hover */
+}
+
+/* Dark Mode für Content Script Popover */
+@media (prefers-color-scheme: dark) {
+    #stamp-injector-popover {
+        background-color: var(--cs-dm-bg-secondary);
+        color: var(--cs-dm-text-primary);
+        border-color: var(--cs-dm-border-color);
+        box-shadow: 0 5px 18px rgba(0,0,0,0.3);
+    }
+    #stamp-injector-popover h3 {
+        background-color: var(--cs-dm-bg-primary);
+        border-bottom-color: var(--cs-dm-border-color);
+        color: var(--cs-dm-accent);
+    }
+    #stamp-injector-popover li {
+        /* border-bottom-color: var(--cs-dm-border-color); */
+        color: var(--cs-dm-text-primary);
+    }
+    #stamp-injector-popover li:hover {
+        background-color: var(--cs-dm-accent-hover-bg);
+        color: var(--cs-dm-accent);
+    }
+}
+
+/* Scrollbar Styling für Popover (optional) */
+#stamp-injector-popover::-webkit-scrollbar {
+    width: 7px;
+}
+#stamp-injector-popover::-webkit-scrollbar-track {
+    background: transparent;
+}
+#stamp-injector-popover::-webkit-scrollbar-thumb {
+    background-color: #bbb; /* Fallback-Farbe */
+    border-radius: var(--cs-border-radius-medium);
+}
+@media (prefers-color-scheme: light) {
+     #stamp-injector-popover::-webkit-scrollbar-thumb {
+        background-color: var(--cs-lm-border-color);
+    }
+}
+@media (prefers-color-scheme: dark) {
+     #stamp-injector-popover::-webkit-scrollbar-thumb {
+        background-color: var(--cs-dm-border-color);
+    }
+}

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stempel Helfer</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        <div id="listView">
+            <header>
+                <h1>Meine Stempel</h1>
+                <div class="header-actions">
+                    <button id="exportStampsBtn" class="icon-btn" title="Stempel exportieren">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M5 20v-4h2v2h10v-2h2v4H5Zm7-4L7.5 11.5l1.4-1.4L11 12.175V4h2v8.175L15.1 10.1l1.4 1.4L12 16Z"/></svg>
+                    </button>
+                    <input type="file" id="importFile" accept=".json" style="display: none;">
+                    <button id="importStampsBtn" class="icon-btn" title="Stempel importieren">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M11 20V8.825L8.9 10.925L7.5 9.5L12 5l4.5 4.5l-1.4 1.425L13 8.825V20h-2ZM5 5V3h14v2H5Z"/></svg>
+                    </button>
+                    <button id="showAddFormBtn" class="icon-btn primary-action" title="Neuen Stempel hinzufügen">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2h6Z"></path></svg>
+                    </button>
+                </div>
+            </header>
+            <div id="stampList" class="stamp-list">
+                </div>
+        </div>
+
+        <div id="formView" style="display: none;">
+            <header>
+                <h1 id="formTitle">Neuen Stempel erstellen</h1>
+                <button id="backToListBtn" class="icon-btn" title="Zurück zur Liste">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="m12 20l-8-8l8-8l1.425 1.4l-5.6 5.6H20v2H7.825l5.6 5.6L12 20Z"/></svg>
+                </button>
+            </header>
+            <div class="form-content">
+                <label for="stampName">Name:</label>
+                <input type="text" id="stampName" name="stampName" required>
+
+                <label for="stampLine1">Zeile 1:</label>
+                <input type="text" id="stampLine1" name="stampLine1" required>
+
+                <label for="stampLine2">Zeile 2:</label>
+                <input type="text" id="stampLine2" name="stampLine2" required>
+
+                <label for="stampLine3">Zeile 3:</label>
+                <input type="text" id="stampLine3" name="stampLine3" required>
+
+                <label for="stampLine4">Zeile 4 (optional):</label>
+                <input type="text" id="stampLine4" name="stampLine4">
+
+                <input type="hidden" id="stampId">
+
+                <div class="form-actions">
+                    <button id="saveStampBtn" class="primary-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M5 21V3h11.175L19 5.825V21H5Zm2-2h10V6.825L14.175 4H7v15Zm0 0V4v15Zm3-9h4V8H10v4Z"></path></svg> Speichern
+                    </button>
+                    <button id="cancelEditBtn" class="secondary-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M6.4 19L5 17.6l5.6-5.6L5 6.4L6.4 5l5.6 5.6L17.6 5L19 6.4L13.4 12l5.6 5.6l-1.4 1.4l-5.6-5.6L6.4 19Z"></path></svg> Abbrechen
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="toastNotification" class="toast"></div>
+    </div>
+    <script src="popup.js"></script>
+</body>
+</html>
