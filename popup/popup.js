@@ -65,6 +65,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Load Stamps ---
     function loadStamps() {
+        if (!chrome.storage || !chrome.storage.local) {
+            showToast('Fehler: chrome.storage ist nicht verfügbar. Bitte als Chrome Extension ausführen.');
+            return;
+        }
         chrome.storage.local.get(['stamps'], (result) => {
             stamps = (result.stamps || []).map(migrateStampToLines);
             renderStamps();
@@ -254,6 +258,20 @@ document.addEventListener('DOMContentLoaded', () => {
     showAddFormBtn.addEventListener('click', () => showFormView(null));
     backToListBtn.addEventListener('click', showListView);
     cancelEditBtn.addEventListener('click', showListView); // "Abbrechen" im Formular führt auch zur Liste
+
+    // --- Theme Detection & Icon Update ---
+    function notifyBackgroundAboutTheme() {
+        if (window.matchMedia) {
+            const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            chrome.runtime.sendMessage({ type: 'THEME_CHANGED', isDarkMode: isDark });
+        }
+    }
+
+    // Beim Laden und bei Theme-Wechsel melden
+    notifyBackgroundAboutTheme();
+    if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', notifyBackgroundAboutTheme);
+    }
 
     // --- Initial Load ---
     showListView(); // Starte mit der Listenansicht

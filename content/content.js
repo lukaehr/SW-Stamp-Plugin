@@ -205,4 +205,16 @@ function migrateStampToLines(stamp) {
     };
 }
 
+// --- Theme Detection & Icon Update (optional im Content-Script) ---
+function notifyBackgroundAboutTheme() {
+    if (window.matchMedia) {
+        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        chrome.runtime.sendMessage({ type: 'THEME_CHANGED', isDarkMode: isDark });
+    }
+}
+notifyBackgroundAboutTheme();
+if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', notifyBackgroundAboutTheme);
+}
+
 initialize();
