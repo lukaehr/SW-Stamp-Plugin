@@ -124,10 +124,14 @@ function addIconToTextarea(textarea) {
         // Positionierung oben rechts im Textfeld (ggf. anpassen)
         const textareaStyle = getComputedStyle(textarea);
         const paddingTop = parseFloat(textareaStyle.paddingTop) || 0;
+        const paddingBottom = parseFloat(textareaStyle.paddingBottom) || 0;
         const paddingRight = parseFloat(textareaStyle.paddingRight) || 0;
 
-        wrapper.style.top = `${textarea.offsetTop + paddingTop + 5}px`; // 5px vom oberen Rand
+        /* wrapper.style.top = `${textarea.offsetTop + paddingTop + 50}%`; // 50% vom oberen Rand
+        wrapper.style.bottom = `${textarea.offsetBottom + paddingBottom + 50}%`; // 50% vom oberen Rand */
         wrapper.style.right = `${paddingRight + 5}px`; // 5px vom rechten Rand innerhalb des Paddings des Textareas
+        wrapper.style.top = `50%`;
+        wrapper.style.bottom = `50%`;
 
         textarea.insertAdjacentElement('afterend', wrapper); // Besser: Wrapper in Parent, dann absolut positionieren
                                                             // Korrektur: Den Wrapper in den Parent des Textareas einfügen
