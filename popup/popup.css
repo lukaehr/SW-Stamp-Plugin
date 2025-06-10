@@ -8,8 +8,8 @@
     --lm-text-secondary: #444444;
     --lm-accent: #003DA5;
     --lm-accent-hover: #002c7a;
-    --lm-danger: #c53030;
-    --lm-danger-hover: #9b2c2c;
+    --lm-danger: #cc2626;
+    --lm-danger-hover: #cc2626;
     --lm-icon-fill: #383838; /* Etwas dunkler für besseren Kontrast */
     --lm-icon-fill-hover: #000000;
     --lm-border-color: #c0c0c0;
@@ -26,8 +26,8 @@
     --dm-text-secondary: #b8b8b8;
     --dm-accent: #005BC9;
     --dm-accent-hover: #0077ff;
-    --dm-danger: #f47174;
-    --dm-danger-hover: #ff8a80;
+    --dm-danger: #ca3033;
+    --dm-danger-hover: #ca3033;
     --dm-icon-fill: #b0b0b0; /* Etwas heller für besseren Kontrast */
     --dm-icon-fill-hover: #ffffff;
     --dm-border-color: #303a42;
@@ -37,9 +37,9 @@
 
     /* General */
     --font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    --border-radius-strong: 10px;
-    --border-radius-medium: 7px;
-    --border-radius-small: 4px;
+    --border-radius-strong: 24px;
+    --border-radius-medium: 16px;
+    --border-radius-small: 8px;
     --popup-width: 400px;
     --popup-max-height: 560px;
 }
@@ -71,7 +71,7 @@ body {
     flex-direction: column;
     height: 100%;
     width: 100%;
-    overflow: hidden;
+    overflow: visible;
 }
 
 #listView, #formView {
@@ -79,7 +79,7 @@ body {
     flex-direction: column;
     flex-grow: 1;
     width: 100%;
-    overflow: hidden;
+    overflow: visible;
 }
 
 #listView header, #formView header {
@@ -198,17 +198,12 @@ body {
     background-color: var(--lm-bg-secondary);
     border-radius: var(--border-radius-strong);
     padding: 14px;
-    box-shadow: var(--lm-card-shadow);
     display: flex;
     flex-direction: column;
     gap: 8px;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
     width: 100%;
     box-sizing: border-box;
-}
-.stamp-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.09);
 }
 @media (prefers-color-scheme: dark) {
     .stamp-item {
@@ -243,36 +238,44 @@ body {
 
 .stamp-actions {
     display: flex;
-    gap: 6px; /* Etwas mehr Platz zwischen den moderneren Buttons */
+    gap: 4px; /* Etwas mehr Platz zwischen den moderneren Buttons */
     flex-shrink: 0;
 }
 
 /* NEUE STILE FÜR .action-btn IN .stamp-actions */
 .stamp-actions .action-btn {
-    background: transparent;
-    padding: 7px; /* Leicht vergrößerte Klickfläche */
-    border-radius: 0;
+    background-color: transparent;
+    padding: 8px;
+    border: none; /* Kein Rahmen */
+    border-radius: 64px; /* Leichte Abrundung für modernes Flat-Design */
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.15s ease, background-color 0.2s ease; /* background-color für subtilen Hover */
+    transition: transform 0.15s ease, background-color 0.2s ease, box-shadow 0.15s;
+    box-shadow: none; /* Kein Schatten im Normalzustand */
+    outline: none;
+    cursor: pointer;
 }
 .stamp-actions .action-btn svg {
-    width: 20px; /* Leicht vergrößerte Icons */
-    height: 20px;
+    width: 16px;
+    height: 16px;
     fill: var(--lm-icon-fill);
     transition: fill 0.2s ease;
 }
 .stamp-actions .action-btn:hover {
-    background-color: rgba(var(--lm-bg-tertiary-rgb), 0.4); /* Sehr subtiler Hintergrund beim Hover */
-    transform: scale(1.05); /* Moderner Zoom-Effekt */
+    background-color: #00000010;
+    transform: scale(1.05);
 }
 .stamp-actions .action-btn:hover svg {
-    fill: var(--lm-icon-fill-hover); /* Icon-Farbe ändert sich stärker */
+    fill: var(--lm-icon-fill-hover);
 }
 .stamp-actions .action-btn:active {
-    transform: scale(0.98); /* Klick-Feedback */
-    background-color: rgba(var(--lm-bg-tertiary-rgb), 0.6); /* Etwas stärkerer Hintergrund beim Klick */
+    background-color: #ffffff10;
+    transform: scale(0.95);
+}
+.stamp-actions .action-btn:focus {
+    outline: 2px solid var(--lm-accent);
+    outline-offset: 1px;
 }
 
 /* Dark Mode für die neuen .action-btn Stile */
@@ -281,15 +284,17 @@ body {
         fill: var(--dm-icon-fill);
     }
     .stamp-actions .action-btn:hover {
-        background-color: rgba(var(--dm-bg-tertiary-rgb), 0.3); /* Dunkler, subtiler Hintergrund */
-        /* transform ist bereits oben definiert und gilt auch hier */
+        background-color: #ffffff10;
     }
     .stamp-actions .action-btn:hover svg {
         fill: var(--dm-icon-fill-hover);
     }
     .stamp-actions .action-btn:active {
-        background-color: rgba(var(--dm-bg-tertiary-rgb), 0.5);
-        /* transform ist bereits oben definiert */
+        background-color: #ffffff10;
+    }
+    .stamp-actions .action-btn:focus {
+        outline: 2px solid var(--dm-accent);
+        outline-offset: 1px;
     }
 }
 /* Ende der neuen Stile für .action-btn */
@@ -326,7 +331,7 @@ body {
 }
 .stamp-content:hover {
     border-color: var(--lm-accent);
-    background-color: var(--lm-bg-secondary);
+    /* background-color: var(--lm-bg-secondary); */
 }
 @media (prefers-color-scheme: dark) {
     .stamp-content {
@@ -336,7 +341,7 @@ body {
     }
     .stamp-content:hover {
         border-color: var(--dm-accent);
-        background-color: var(--dm-bg-secondary);
+        /* background-color: var(--dm-bg-secondary); */
     }
 }
 
@@ -366,19 +371,19 @@ body {
 
 #formView .form-content input[type="text"] {
     width: 100%;
-    padding: 10px 12px;
+    padding: 12px 16px;
     border: 1px solid var(--lm-input-border);
     border-radius: var(--border-radius-medium);
     background-color: var(--lm-input-bg);
     color: var(--lm-text-primary);
-    font-size: 0.95em;
+    font-size: 14px;
     box-sizing: border-box;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 #formView .form-content input[type="text"]:focus {
     outline: none;
     border-color: var(--lm-accent);
-    box-shadow: 0 0 0 2.5px rgba(0, 61, 165, 0.25);
+    /* box-shadow: 0 0 0 2.5px rgba(0, 61, 165, 0.25); */
 }
 @media (prefers-color-scheme: dark) {
     #formView .form-content input[type="text"] {
@@ -388,28 +393,28 @@ body {
     }
     #formView .form-content input[type="text"]:focus {
         border-color: var(--dm-accent);
-        box-shadow: 0 0 0 2.5px rgba(0, 91, 201, 0.3);
+        /* box-shadow: 0 0 0 2.5px rgba(0, 91, 201, 0.3); */
     }
 }
 
 #formView .form-content textarea {
     width: 100%;
-    padding: 10px 12px;
+    padding: 12px 16px;
     border: 1px solid var(--lm-input-border);
     border-radius: var(--border-radius-medium);
     background-color: var(--lm-input-bg);
     color: var(--lm-text-primary);
-    font-size: 0.95em;
+    font-size: 14px;
     box-sizing: border-box;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    min-height: 80px;
-    max-height: 220px;
+    min-height: 96px;
+    max-height: 240px;
     resize: vertical;
 }
 #formView .form-content textarea:focus {
     outline: none;
     border-color: var(--lm-accent);
-    box-shadow: 0 0 0 2.5px rgba(0, 61, 165, 0.25);
+    /* box-shadow: 0 0 0 2.5px rgba(0, 61, 165, 0.25); */
 }
 @media (prefers-color-scheme: dark) {
     #formView .form-content textarea {
@@ -419,29 +424,34 @@ body {
     }
     #formView .form-content textarea:focus {
         border-color: var(--dm-accent);
-        box-shadow: 0 0 0 2.5px rgba(0, 91, 201, 0.3);
+        /* box-shadow: 0 0 0 2.5px rgba(0, 91, 201, 0.3); */
     }
 }
 
 #formView .form-actions {
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
+    gap: 8px;
     margin-top: 12px;
-    padding-top: 10px;
-    border-top: 1px solid var(--lm-border-color);
+    padding-top: 12px;
+    /* border-top: 1px solid var(--lm-border-color); */
     flex-shrink: 0;
     width: 100%;
     box-sizing: border-box;
 }
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
     #formView .form-actions { border-top: 1px solid var(--dm-border-color); }
-}
+} */
 
 .form-actions .primary-btn, .form-actions .secondary-btn {
-    padding: 9px 16px;
-    font-size: 0.9em;
+    display: flex;
+    align-items: center; justify-content: center;
+    padding: 12px 16px;
+    font-size: 14px; line-height: 14px;
     border-radius: var(--border-radius-medium);
+    font-family: var(--font-family);
+    border: 1px solid var(--dm-input-border);
+    cursor: pointer;
 }
 .form-actions .primary-btn svg, .form-actions .secondary-btn svg {
     width: 16px;
@@ -453,15 +463,15 @@ body {
     background-color: var(--lm-accent);
     color: white;
 }
-.form-actions .primary-btn:hover { background-color: var(--lm-accent-hover); }
+.form-actions .primary-btn:hover { background-color: var(--lm-accent-hover); border-color: var(--dm-accent); }
 .form-actions .primary-btn svg { fill: white; }
 
 .form-actions .secondary-btn {
     background-color: var(--lm-bg-secondary);
     color: var(--lm-text-primary);
-    border: 1px solid var(--lm-border-color);
+    /* border: 1px solid var(--lm-border-color); */
 }
-.form-actions .secondary-btn:hover { background-color: var(--lm-bg-tertiary); }
+.form-actions .secondary-btn:hover { background-color: var(--lm-bg-tertiary); border-color: var(--dm-accent); }
 .form-actions .secondary-btn svg { fill: var(--lm-text-primary); }
 
 @media (prefers-color-scheme: dark) {
@@ -471,7 +481,7 @@ body {
     .form-actions .secondary-btn {
         background-color: var(--dm-bg-secondary);
         color: var(--dm-text-primary);
-        border: 1px solid var(--dm-border-color);
+        /* border: 1px solid var(--dm-border-color); */
     }
     .form-actions .secondary-btn:hover { background-color: var(--dm-bg-tertiary); }
     .form-actions .secondary-btn svg { fill: var(--dm-text-primary); }
