@@ -379,6 +379,7 @@ body {
     font-size: 14px;
     box-sizing: border-box;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    font-family: var(--font-family);
 }
 #formView .form-content input[type="text"]:focus {
     outline: none;
@@ -410,6 +411,7 @@ body {
     min-height: 96px;
     max-height: 240px;
     resize: vertical;
+    font-family: var(--font-family);
 }
 #formView .form-content textarea:focus {
     outline: none;
@@ -452,6 +454,7 @@ body {
     font-family: var(--font-family);
     border: 1px solid var(--dm-input-border);
     cursor: pointer;
+    font-family: var(--font-family);
 }
 .form-actions .primary-btn svg, .form-actions .secondary-btn svg {
     width: 16px;
