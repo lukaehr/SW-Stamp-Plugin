@@ -4,7 +4,10 @@ let stampsCache = []; // Cache für die Stempel
 
 // --- SVG Icons (Pfade relativ zum Extension-Root) ---
 // Diese müssen in manifest.json -> web_accessible_resources deklariert sein
-const stampIconUrl = chrome.runtime.getURL('icons/stamp_icon.svg');
+let stampIconUrl = '';
+if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.getURL) {
+    stampIconUrl = chrome.runtime.getURL('icons/stamp_icon.svg');
+}
 
 // Funktion zum Abrufen der Stempel aus dem Storage
 function fetchStamps(callback) {
@@ -175,8 +178,30 @@ const observer = new MutationObserver((mutationsList) => {
 // Initiale Suche nach Textfeldern und Start des Observers
 function initialize() {
     fetchStamps(); // Lade Stempel initial in den Cache
-    document.querySelectorAll('textarea[rows]').forEach(addIconToTextarea);
-    observer.observe(document.body, { childList: true, subtree: true });
+    function startObserver() {
+        if (!document.body) {
+            // Sollte eigentlich nie passieren, aber zur Sicherheit
+            return;
+        }
+        try {
+            document.querySelectorAll('textarea[rows]').forEach(addIconToTextarea);
+            observer.observe(document.body, { childList: true, subtree: true });
+        } catch (e) {
+            // Fehlerbehandlung für seltene Fälle, z.B. restriktive Seiten
+            console.error('Fehler beim Initialisieren der Stempel-Icons:', e);
+        }
+    }
+
+    if (document.body) {
+        startObserver();
+    } else {
+        // Falls body noch nicht existiert, warte auf DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', () => {
+            if (document.body) {
+                startObserver();
+            }
+        });
+    }
 }
 
 // Listener für Storage-Änderungen, um den Cache zu aktualisieren
