@@ -12,14 +12,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Form View Elements
     const formTitle = document.getElementById('formTitle');
-    const backToListBtn = document.getElementById('backToListBtn'); // Neuer Button
+    const backToListBtn = document.getElementById('backToListBtn');
     const saveStampBtn = document.getElementById('saveStampBtn');
-    const cancelEditBtn = document.getElementById('cancelEditBtn'); // Wird jetzt zum "Zurück zur Liste" Button
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
     const stampNameInput = document.getElementById('stampName');
-    const stampLine1Input = document.getElementById('stampLine1');
-    const stampLine2Input = document.getElementById('stampLine2');
-    const stampLine3Input = document.getElementById('stampLine3');
-    const stampLine4Input = document.getElementById('stampLine4');
+    const stampLinesInput = document.getElementById('stampLines');
     const stampIdInput = document.getElementById('stampId');
 
     // General
@@ -46,19 +43,13 @@ document.addEventListener('DOMContentLoaded', () => {
             formTitle.textContent = 'Stempel bearbeiten';
             stampIdInput.value = stamp.id;
             stampNameInput.value = stamp.name;
-            stampLine1Input.value = stamp.line1;
-            stampLine2Input.value = stamp.line2;
-            stampLine3Input.value = stamp.line3;
-            stampLine4Input.value = stamp.line4 || '';
+            stampLinesInput.value = stamp.lines || '';
         } else { // Add new stamp
             formTitle.textContent = 'Neuen Stempel erstellen';
             stampIdInput.value = '';
             // Reset form fields
             stampNameInput.value = '';
-            stampLine1Input.value = '';
-            stampLine2Input.value = '';
-            stampLine3Input.value = '';
-            stampLine4Input.value = '';
+            stampLinesInput.value = '';
         }
         stampNameInput.focus();
     }
@@ -75,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Load Stamps ---
     function loadStamps() {
         chrome.storage.local.get(['stamps'], (result) => {
-            stamps = result.stamps || [];
+            stamps = (result.stamps || []).map(migrateStampToLines);
             renderStamps();
         });
     }
@@ -92,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
             stampEl.classList.add('stamp-item');
             stampEl.dataset.id = stamp.id;
 
-            const fullStampText = [stamp.line1, stamp.line2, stamp.line3, stamp.line4].filter(Boolean).join('\n');
+            const fullStampText = (stamp.lines || '').trim();
 
             stampEl.innerHTML = `
                 <div class="stamp-header">
@@ -142,17 +133,14 @@ document.addEventListener('DOMContentLoaded', () => {
     saveStampBtn.addEventListener('click', () => {
         const id = stampIdInput.value;
         const name = stampNameInput.value.trim();
-        const line1 = stampLine1Input.value.trim();
-        const line2 = stampLine2Input.value.trim();
-        const line3 = stampLine3Input.value.trim();
-        const line4 = stampLine4Input.value.trim();
+        const lines = stampLinesInput.value.replace(/\r\n/g, '\n').trim();
 
-        if (!name || !line1 || !line2 || !line3) {
-            showToast('Name und die ersten 3 Zeilen sind Pflichtfelder.');
+        if (!name || !lines) {
+            showToast('Name und Stempeltext sind Pflichtfelder.');
             return;
         }
 
-        const newStamp = { id: id || Date.now().toString(), name, line1, line2, line3, line4 };
+        const newStamp = { id: id || Date.now().toString(), name, lines };
 
         let updatedStamps;
         if (id) { // Update
@@ -211,16 +199,18 @@ document.addEventListener('DOMContentLoaded', () => {
         reader.onload = (e) => {
             try {
                 const importedData = JSON.parse(e.target.result);
-                if (!Array.isArray(importedData) || !importedData.every(isValidStamp)) {
+                if (!Array.isArray(importedData) || !importedData.every(isValidStampImport)) {
                     showToast("Ungültige JSON-Datei oder falsches Format.");
                     return;
                 }
 
-                // Import-Strategie: Ersetzen nach Bestätigung
+                // Migration: Konvertiere ggf. alte Stempelstruktur zu neuer Struktur
+                const migrated = importedData.map(migrateStampToLines);
+
                 if (confirm(`Möchtest du wirklich alle vorhandenen Stempel durch die Stempel aus der Datei "${file.name}" ersetzen?`)) {
-                    stamps = importedData;
-                    chrome.storage.local.set({ stamps: importedData }, () => {
-                        showToast(`${importedData.length} Stempel importiert!`);
+                    stamps = migrated;
+                    chrome.storage.local.set({ stamps: migrated }, () => {
+                        showToast(`${migrated.length} Stempel importiert!`);
                         if (listView.style.display === 'block') {
                             loadStamps(); // Neu laden und rendern, wenn Listenansicht aktiv
                         }
@@ -236,15 +226,29 @@ document.addEventListener('DOMContentLoaded', () => {
         reader.readAsText(file);
     });
 
-    function isValidStamp(stamp) {
-        return stamp && typeof stamp.name === 'string' &&
-               typeof stamp.line1 === 'string' &&
-               typeof stamp.line2 === 'string' &&
-               typeof stamp.line3 === 'string' &&
-               (typeof stamp.line4 === 'string' || typeof stamp.line4 === 'undefined' || stamp.line4 === null) && // line4 is optional
-               typeof stamp.id === 'string'; // id ist wichtig
+    // Migration: Wandelt alte Stempel mit line1-line4 in das neue lines-Feld um
+    function migrateStampToLines(stamp) {
+        if (typeof stamp.lines === 'string') {
+            return stamp;
+        }
+        // Fallback für alte Struktur
+        const linesArr = [stamp.line1, stamp.line2, stamp.line3, stamp.line4].filter(Boolean);
+        return {
+            id: stamp.id,
+            name: stamp.name,
+            lines: linesArr.join('\n')
+        };
     }
 
+    // Für Import: Akzeptiere beide Formate (alt und neu)
+    function isValidStampImport(stamp) {
+        return stamp && typeof stamp.name === 'string' &&
+            typeof stamp.id === 'string' &&
+            (
+                typeof stamp.lines === 'string' ||
+                (typeof stamp.line1 === 'string' && typeof stamp.line2 === 'string' && typeof stamp.line3 === 'string')
+            );
+    }
 
     // --- Event Listeners für View-Wechsel ---
     showAddFormBtn.addEventListener('click', () => showFormView(null));

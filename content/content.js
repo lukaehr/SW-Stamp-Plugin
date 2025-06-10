@@ -9,7 +9,7 @@ const stampIconUrl = chrome.runtime.getURL('icons/stamp_icon.svg');
 // Funktion zum Abrufen der Stempel aus dem Storage
 function fetchStamps(callback) {
     chrome.storage.local.get(['stamps'], (result) => {
-        stampsCache = result.stamps || [];
+        stampsCache = (result.stamps || []).map(migrateStampToLines);
         if (callback) callback(stampsCache);
     });
 }
@@ -18,7 +18,7 @@ function fetchStamps(callback) {
 function showStampPopover(textarea) {
     currentTextarea = textarea;
     if (stampPopover) {
-        stampPopover.remove(); // Altes Popover entfernen
+        stampPopover.remove();
     }
 
     stampPopover = document.createElement('div');
@@ -34,7 +34,7 @@ function showStampPopover(textarea) {
         stampsCache.forEach(stamp => {
             const listItem = document.createElement('li');
             listItem.textContent = stamp.name;
-            listItem.title = [stamp.line1, stamp.line2, stamp.line3, stamp.line4].filter(Boolean).join('\n');
+            listItem.title = (stamp.lines || '').replace(/\n/g, '⏎ ');
             listItem.addEventListener('click', () => {
                 insertStamp(stamp);
                 hideStampPopover();
@@ -75,20 +75,16 @@ function handleClickOutsidePopover(event) {
 // Stempel in das Textfeld einfügen
 function insertStamp(stamp) {
     if (currentTextarea) {
-        const textToInsert = [stamp.line1, stamp.line2, stamp.line3, stamp.line4]
-            .filter(Boolean) // Entfernt leere optionale Zeilen
-            .join('\n');
+        const textToInsert = (stamp.lines || '').trim();
 
         const start = currentTextarea.selectionStart;
         const end = currentTextarea.selectionEnd;
         const text = currentTextarea.value;
         currentTextarea.value = text.substring(0, start) + textToInsert + text.substring(end);
 
-        // Cursor nach dem eingefügten Text positionieren
         currentTextarea.selectionStart = currentTextarea.selectionEnd = start + textToInsert.length;
         currentTextarea.focus();
 
-        // Ein Event auslösen, falls die Webseite auf Eingaben reagiert (z.B. bei React/Vue Apps)
         const event = new Event('input', { bubbles: true, cancelable: true });
         currentTextarea.dispatchEvent(event);
     }
@@ -192,5 +188,17 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
     }
 });
 
+// Migration: Wandelt alte Stempel mit line1-line4 in das neue lines-Feld um
+function migrateStampToLines(stamp) {
+    if (typeof stamp.lines === 'string') {
+        return stamp;
+    }
+    const linesArr = [stamp.line1, stamp.line2, stamp.line3, stamp.line4].filter(Boolean);
+    return {
+        id: stamp.id,
+        name: stamp.name,
+        lines: linesArr.join('\n')
+    };
+}
 
 initialize();

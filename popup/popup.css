@@ -392,6 +392,37 @@ body {
     }
 }
 
+#formView .form-content textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--lm-input-border);
+    border-radius: var(--border-radius-medium);
+    background-color: var(--lm-input-bg);
+    color: var(--lm-text-primary);
+    font-size: 0.95em;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    min-height: 80px;
+    max-height: 220px;
+    resize: vertical;
+}
+#formView .form-content textarea:focus {
+    outline: none;
+    border-color: var(--lm-accent);
+    box-shadow: 0 0 0 2.5px rgba(0, 61, 165, 0.25);
+}
+@media (prefers-color-scheme: dark) {
+    #formView .form-content textarea {
+        border: 1px solid var(--dm-input-border);
+        background-color: var(--dm-input-bg);
+        color: var(--dm-text-primary);
+    }
+    #formView .form-content textarea:focus {
+        border-color: var(--dm-accent);
+        box-shadow: 0 0 0 2.5px rgba(0, 91, 201, 0.3);
+    }
+}
+
 #formView .form-actions {
     display: flex;
     justify-content: flex-end;
